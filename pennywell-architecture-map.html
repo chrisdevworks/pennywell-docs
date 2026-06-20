@@ -75,13 +75,13 @@
 
 <header class="hero">
   <div class="wrap">
-     <!-- Navigation Bar -->
+    <!-- Navigation Bar -->
     <nav style="display: flex; gap: 20px; margin-bottom: 24px; font-size: 13px; font-weight: 600; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 12px;">
       <a href="index.html" style="color: #cbd5e1; text-decoration: none; padding-bottom: 10px; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#cbd5e1'">Home</a>
       <a href="pennywell-architecture-map.html" style="color: #fff; text-decoration: none; border-bottom: 2px solid #9fc2e8; padding-bottom: 10px;">Architecture Map</a>
       <a href="pennywell-business-guide.html" style="color: #cbd5e1; text-decoration: none; padding-bottom: 10px; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#cbd5e1'">Business Guide</a>
     </nav>
-
+    
     <p class="eyebrow">Phase 1 · Week 1 Deliverable — Airtable Architecture Map</p>
     <h1>Pennywell Scholarship Operating System</h1>
     <p class="sub">How the Airtable base works today, why the dashboard shows zero, and the wiring plan that turns it into one source of truth feeding the Scholarship Wallet.</p>
@@ -418,7 +418,17 @@
     <ul class="clean" style="margin-top:2px">
       <li><b>1. Airtable plan tier</b> <span class="badge b-red">hard blocker</span><br>The free plan caps a base at 1,000 records. The Hub already holds 1,922, and we'll add hundreds of application rows per client, so the free plan physically cannot hold the data. Nothing else works until this is settled.<br><em>Ask: are we on a paid Airtable plan with room for 50,000+ records?</em></li>
       <li><b>2. Build a new clean base, migrate into it</b> <span class="badge b-grey">confirmation</span><br>Agreed in the 6/19 meeting: instead of untangling the current base (249 orphaned applications, automations firing on every edit, ghost rows, a duplicate client), we build a fresh base inside the <em>same workspace</em> and copy clean data in. The old base stays as a read-only backup until the new one is validated, then it's archived. <b>No extra Airtable cost</b> — bases are unlimited on any plan; you pay per editor seat, not per base, and the new base gets its own 50,000-record cap. Migration runs in dependency order so links resolve: <b>Clients → Students → Scholarships + Hub → Applications → Awards → Emails</b> (clean as you go: dedupe the duplicate client, drop the two ghost rows, fold Nathalia into Applications, skip the empty Tasks table, swap the record-ID key for an email key). The stale Weekly Reports table isn't migrated — auto-rollups replace it.<br><em>Confirm: cleared to build a new base and migrate, keeping the old one as backup until sign-off?</em></li>
-      <li><b>3. Client portal tool and budget</b><br>The Scholarship Wallet lets each family log in and see only their own data. Airtable's own external sharing is pricey; tools like Softr or Noloco do client portals more cheaply on top of Airtable. The choice changes both the build and the monthly cost.<br><em>Ask: Airtable external access or Softr/Noloco, and is there budget?</em></li>
+      <li><b>3. Client portal tool and budget</b><br>The Scholarship Wallet lets each family log in and see only their own data. Airtable can't do that cheaply or securely on its own (no true per-client row-level security; external access is billed per seat). The fix is a front-end tool that sits <em>on top of</em> the Airtable base and adds logins, branding, and row-level security. Two real options — both prototype for free, both are add-ons to the Airtable Team plan, not replacements for it:
+      <table style="margin:10px 0 4px;border-collapse:collapse;font-size:12.5px;width:100%">
+        <thead><tr style="background:#f1f5f9;text-align:left"><th style="padding:5px 8px;border:1px solid #d7dde5">&nbsp;</th><th style="padding:5px 8px;border:1px solid #d7dde5">Softr (Professional)</th><th style="padding:5px 8px;border:1px solid #d7dde5">Noloco (Pro)</th></tr></thead>
+        <tbody>
+          <tr><td style="padding:5px 8px;border:1px solid #d7dde5"><b>Price (annual)</b></td><td style="padding:5px 8px;border:1px solid #d7dde5">~$139/mo</td><td style="padding:5px 8px;border:1px solid #d7dde5">~$99/mo</td></tr>
+          <tr><td style="padding:5px 8px;border:1px solid #d7dde5"><b>Client logins included</b></td><td style="padding:5px 8px;border:1px solid #d7dde5">100</td><td style="padding:5px 8px;border:1px solid #d7dde5">50 (then $1 each)</td></tr>
+          <tr><td style="padding:5px 8px;border:1px solid #d7dde5"><b>Airtable connection</b></td><td style="padding:5px 8px;border:1px solid #d7dde5">Live read/write</td><td style="padding:5px 8px;border:1px solid #d7dde5">~60-sec sync</td></tr>
+          <tr><td style="padding:5px 8px;border:1px solid #d7dde5"><b>Extras</b></td><td style="padding:5px 8px;border:1px solid #d7dde5">Removes branding</td><td style="padding:5px 8px;border:1px solid #d7dde5">White-label + native mobile apps</td></tr>
+        </tbody>
+      </table>
+      Both do proper row-level security and branding. At 8–50 clients Noloco is the cheaper fit; past ~100 clients Softr's seat math pulls ahead. <b>Note:</b> "NocoDB" (seen in the meeting notes) is a <em>different</em> product — an open-source Airtable replacement, not a portal builder — so it's not in this comparison.<br><em>Ask: Softr or Noloco for the portal? Budget is $0 to prototype, then ~$99–139/mo at launch.</em></li>
       <li><b>4. Service tiers and sensitive data</b><br>The Service Tier field is blank for every client, and we need each one's tier (Done-For-You vs Intel) because it drives what they get and how they're reported. The base also holds minors' personal data (date of birth, race, income, FAFSA), so we need rules for who sees what, especially once clients log into the portal.<br><em>Ask: what tier is each active client, and what are the data-handling rules?</em></li>
       <li><b>5. Strategist workflow</b> <span class="badge b-grey">confirmation</span><br>The system only works if Sienna logs her applications in Airtable, not personal Excel files. The Operating Manual already mandates this; it just has to hold in practice, or the dashboard shows empty data like it does today.<br><em>Ask: we're committed to Airtable-only logging, and I'll train Sienna on it, right?</em></li>
     </ul>
