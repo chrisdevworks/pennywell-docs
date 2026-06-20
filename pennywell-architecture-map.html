@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pennywell SOS — Airtable Architecture Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+  :root{
+    --ink:#111827; --muted:#6b7280; --line:#e5e7eb; --bg:#f6f7f9; --surface:#ffffff;
+    --blue:#1e40af; --blue-bg:#e7f0fb; --green:#1b5e3a; --green-bg:#e8f5ec;
+    --amber:#8a5512; --amber-bg:#fdf3e3; --red:#922b21; --red-bg:#fde8e8; --gold:#92400e; --gold-bg:#fff7e6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 22px 80px}
+  header.hero{background:linear-gradient(135deg,#0f172a,#1e3a5f);color:#fff;padding:42px 0 38px;margin-bottom:34px}
+  header.hero .wrap{padding-bottom:0}
+  .eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#9fc2e8;font-weight:700;margin:0 0 10px}
+  h1{font-size:30px;font-weight:800;margin:0 0 10px;letter-spacing:-.5px}
+  .sub{color:#cbd5e1;font-size:15px;margin:0;max-width:760px}
+  .meta{margin-top:18px;font-size:12.5px;color:#9fb4cc;display:flex;gap:18px;flex-wrap:wrap}
+  .meta b{color:#e2e8f0;font-weight:600}
+  h2{font-size:21px;font-weight:700;margin:54px 0 8px;letter-spacing:-.3px;display:flex;align-items:center;gap:10px}
+  h2 .n{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:7px;background:var(--blue);color:#fff;font-size:13px;font-weight:700}
+  .lead{color:var(--muted);font-size:14.5px;margin:0 0 18px;max-width:780px}
+  .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:18px 0 6px}
+  .stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 14px}
+  .stat .v{font-size:24px;font-weight:800;letter-spacing:-.5px}
+  .stat .l{font-size:11.5px;color:var(--muted);margin-top:3px;line-height:1.35}
+  .stat.bad .v{color:var(--red)} .stat.good .v{color:var(--green)}
+  figure{margin:18px 0 6px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;overflow-x:auto}
+  figure svg{width:100%;height:auto;min-width:760px;display:block}
+  figcaption{font-size:12px;color:var(--muted);margin-top:8px;text-align:center}
+  .persona{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0}
+  .pcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .pcard .ph{padding:11px 16px;color:#fff;font-weight:700;font-size:14px}
+  .pcard .ph small{display:block;font-weight:500;font-size:11px;opacity:.85;margin-top:1px}
+  .pcard.cli .ph{background:#1e40af}.pcard.str .ph{background:#b45309}.pcard.fnd .ph{background:#0f766e}
+  .pcard .pb{padding:4px 16px 12px}
+  .pcard .pb ul{margin:0;padding:0;list-style:none}
+  .pcard .pb li{position:relative;padding:8px 0 8px 20px;border-bottom:1px solid var(--line);font-size:13px}
+  .pcard .pb li:last-child{border-bottom:none}
+  .pcard .pb li::before{content:"";position:absolute;left:2px;top:14px;width:6px;height:6px;border-radius:50%;background:#c0392b}
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+  .card h3{margin:0 0 6px;font-size:15px;font-weight:700}
+  .card p{margin:0;font-size:13.5px;color:#374151}
+  .callout{border-left:4px solid var(--blue);background:var(--blue-bg);border-radius:0 10px 10px 0;padding:16px 18px;margin:16px 0;font-size:14px}
+  .callout.warn{border-color:#d97706;background:#fff7e6}
+  .callout.crit{border-color:var(--red);background:var(--red-bg)}
+  .callout b{font-weight:700}
+  ul.clean{margin:12px 0;padding-left:0;list-style:none}
+  ul.clean li{position:relative;padding:7px 0 7px 26px;border-bottom:1px solid var(--line);font-size:14px}
+  ul.clean li:last-child{border-bottom:none}
+  ul.clean li::before{content:"";position:absolute;left:6px;top:14px;width:7px;height:7px;border-radius:50%;background:var(--blue)}
+  ul.clean li.x::before{background:var(--red)} ul.clean li.ok::before{background:var(--green)}
+  table{width:100%;border-collapse:collapse;margin:16px 0;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:13.5px}
+  th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:#f1f3f6;font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;color:#475569;font-weight:700}
+  tr:last-child td{border-bottom:none}
+  td b{font-weight:700}
+  .badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+  .b-green{background:var(--green-bg);color:var(--green)} .b-amber{background:var(--amber-bg);color:var(--amber)}
+  .b-red{background:var(--red-bg);color:var(--red)} .b-blue{background:var(--blue-bg);color:var(--blue)}
+  .b-gold{background:var(--gold-bg);color:var(--gold)} .b-grey{background:#eef1f5;color:#64748b}
+  .roadmap td:first-child{white-space:nowrap;font-weight:700}
+  footer{margin-top:60px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+  @media (max-width:760px){.stats{grid-template-columns:repeat(2,1fr)}.cards{grid-template-columns:1fr}.persona{grid-template-columns:1fr}h1{font-size:24px}}
+  @media print{body{background:#fff}header.hero{background:#0f172a !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}figure svg{min-width:0}.stat,.card,table,.callout{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Phase 1 · Week 1 Deliverable — Airtable Architecture Map</p>
+    <h1>Pennywell Scholarship Operating System</h1>
+    <p class="sub">How the Airtable base works today, why the dashboard shows zero, and the wiring plan that turns it into one source of truth feeding the Scholarship Wallet.</p>
+    <div class="meta"><span><b>Owner:</b> Chris — Chief Automation Architect</span><span><b>Phase:</b> 1 — Build the Operating System</span><span><b>Status:</b> Audit complete</span></div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="callout">
+    <b>The one-line summary:</b> the base already has the right pieces, but nothing is wired together. 249 real applications sit orphaned, and the dashboard reads a manual table almost nobody fills, so it reports zero. The job is mostly connection and consolidation, not new construction. Only two pieces are genuinely new builds: the matching engine and the client portal. A one-client pilot gets us to a working dashboard by the Week 3 target.
+  </div>
+
+  <h2><span class="n">1</span> The system today</h2>
+  <p class="lead">Eight tables exist. The data is real, but it lives in disconnected islands.</p>
+  <div class="stats">
+    <div class="stat"><div class="v">8</div><div class="l">tables in the base</div></div>
+    <div class="stat bad"><div class="v">0 / 249</div><div class="l">applications linked to a student or scholarship</div></div>
+    <div class="stat"><div class="v">1,922</div><div class="l">scholarships in the Hub ($12.6M)</div></div>
+    <div class="stat bad"><div class="v">3</div><div class="l">disconnected places activity is logged</div></div>
+    <div class="stat bad"><div class="v">$0</div><div class="l">shown on the live dashboard</div></div>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 1320 900" xmlns="http://www.w3.org/2000/svg" font-family="Inter, system-ui, sans-serif">
+      <defs>
+        <marker id="ar" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#5f6368"/></marker>
+        <marker id="arR" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#c0392b"/></marker>
+        <marker id="arG" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#2e7d4f"/></marker>
+        <marker id="arA" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#c77d20"/></marker>
+      </defs>
+      <rect x="0" y="0" width="1320" height="900" fill="#ffffff"/>
+      <text x="36" y="36" font-size="23" font-weight="700" fill="#111827">Data flow today</text>
+      <g font-size="12.5" fill="#374151">
+        <rect x="36" y="54" width="14" height="14" rx="3" fill="#e8f5ec" stroke="#2e7d4f"/><text x="56" y="65">Working</text>
+        <rect x="150" y="54" width="14" height="14" rx="3" fill="#fdf3e3" stroke="#c77d20"/><text x="170" y="65">Partial / duplicated</text>
+        <rect x="330" y="54" width="14" height="14" rx="3" fill="#fde8e8" stroke="#c0392b"/><text x="350" y="65">Broken / disconnected</text>
+        <rect x="540" y="54" width="14" height="14" rx="3" fill="#f3eefe" stroke="#7c4dff"/><text x="560" y="65">Automation</text>
+      </g>
+      <rect x="24" y="86" width="244" height="788" rx="10" fill="#fafafa" stroke="#e5e7eb"/>
+      <text x="40" y="108" font-size="12.5" font-weight="700" fill="#6b7280" letter-spacing="1">1 · INTAKE</text>
+      <rect x="288" y="86" width="700" height="788" rx="10" fill="#fafafa" stroke="#e5e7eb"/>
+      <text x="304" y="108" font-size="12.5" font-weight="700" fill="#6b7280" letter-spacing="1">2 · DATA TABLES</text>
+      <rect x="1008" y="86" width="288" height="788" rx="10" fill="#fafafa" stroke="#e5e7eb"/>
+      <text x="1024" y="108" font-size="12.5" font-weight="700" fill="#6b7280" letter-spacing="1">3 · REPORTING</text>
+      <rect x="50" y="140" width="192" height="52" rx="8" fill="#eef2ff" stroke="#6366f1"/>
+      <text x="146" y="162" font-size="14" font-weight="600" fill="#3730a3" text-anchor="middle">Google Form</text>
+      <text x="146" y="180" font-size="11" fill="#4b5563" text-anchor="middle">92-question intake</text>
+      <path d="M146,192 L146,228" stroke="#5f6368" stroke-width="1.6" marker-end="url(#ar)"/>
+      <rect x="50" y="230" width="192" height="50" rx="8" fill="#eef2ff" stroke="#6366f1"/>
+      <text x="146" y="252" font-size="14" font-weight="600" fill="#3730a3" text-anchor="middle">Google Sheet</text>
+      <text x="146" y="269" font-size="11" fill="#4b5563" text-anchor="middle">form responses</text>
+      <path d="M242,255 C300,255 300,176 318,176" fill="none" stroke="#c0392b" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#arR)"/>
+      <rect x="60" y="300" width="172" height="46" rx="8" fill="#f3eefe" stroke="#7c4dff" stroke-dasharray="5 3"/>
+      <text x="146" y="320" font-size="11.5" font-weight="600" fill="#5b21b6" text-anchor="middle">Sheets → Clients</text>
+      <text x="146" y="336" font-size="11.5" font-weight="700" fill="#c0392b" text-anchor="middle">automation: OFF</text>
+      <text x="304" y="134" font-size="11.5" font-weight="700" fill="#9ca3af" letter-spacing="0.5">CLIENT RECORDS</text>
+      <rect x="316" y="144" width="208" height="96" rx="9" fill="#fdf3e3" stroke="#c77d20" stroke-width="1.6"/>
+      <text x="328" y="167" font-size="15" font-weight="700" fill="#8a5512">Clients</text>
+      <text x="328" y="186" font-size="11.5" fill="#7c4a12">8 records · 44 fields</text>
+      <text x="328" y="203" font-size="11" fill="#9a6516">overloaded: parent contact +</text>
+      <text x="328" y="218" font-size="11" fill="#9a6516">duplicated academic data +</text>
+      <text x="328" y="233" font-size="11" fill="#9a6516">rollup fields</text>
+      <rect x="560" y="144" width="200" height="96" rx="9" fill="#fdf3e3" stroke="#c77d20" stroke-width="1.6"/>
+      <text x="572" y="167" font-size="15" font-weight="700" fill="#8a5512">Student Profiles</text>
+      <text x="572" y="186" font-size="11.5" fill="#7c4a12">9 records · 25 fields</text>
+      <text x="572" y="203" font-size="11" fill="#9a6516">the right home for academic /</text>
+      <text x="572" y="218" font-size="11" fill="#9a6516">matching data, but Clients</text>
+      <text x="572" y="233" font-size="11" fill="#9a6516">duplicates the same fields</text>
+      <path d="M524,178 L556,178" stroke="#c77d20" stroke-width="1.8" marker-end="url(#arA)"/>
+      <text x="540" y="170" font-size="10.5" fill="#8a5512" text-anchor="middle">auto-create</text>
+      <rect x="316" y="252" width="208" height="40" rx="8" fill="#f3eefe" stroke="#7c4dff" stroke-dasharray="5 3"/>
+      <text x="420" y="270" font-size="11" font-weight="600" fill="#5b21b6" text-anchor="middle">4 email automations fire</text>
+      <text x="420" y="285" font-size="11" fill="#5b21b6" text-anchor="middle">on every create / update</text>
+      <text x="304" y="332" font-size="11.5" font-weight="700" fill="#9ca3af" letter-spacing="0.5">SCHOLARSHIP SOURCES</text>
+      <rect x="316" y="344" width="232" height="92" rx="9" fill="#e8f5ec" stroke="#2e7d4f" stroke-width="1.6"/>
+      <text x="328" y="367" font-size="15" font-weight="700" fill="#1b5e3a">Scholarships Hub</text>
+      <text x="328" y="386" font-size="11.5" fill="#1f6b43">1,922 records · $12.6M</text>
+      <text x="328" y="403" font-size="11" fill="#2e7d4f">the research asset</text>
+      <text x="328" y="420" font-size="11" fill="#2e7d4f">Matched Clients: 1,678 linked ✓</text>
+      <rect x="584" y="344" width="176" height="92" rx="9" fill="#fdf3e3" stroke="#c77d20" stroke-width="1.6"/>
+      <text x="596" y="367" font-size="15" font-weight="700" fill="#8a5512">Scholarships</text>
+      <text x="596" y="386" font-size="11.5" fill="#7c4a12">66 records</text>
+      <text x="596" y="403" font-size="11" fill="#9a6516">curated no-essay list</text>
+      <text x="596" y="420" font-size="11" fill="#9a6516">(separate from Hub)</text>
+      <text x="304" y="476" font-size="11.5" font-weight="700" fill="#9ca3af" letter-spacing="0.5">APPLICATION ACTIVITY</text>
+      <rect x="316" y="488" width="296" height="130" rx="9" fill="#fde8e8" stroke="#c0392b" stroke-width="1.8"/>
+      <text x="330" y="512" font-size="15" font-weight="700" fill="#922b21">Applications</text>
+      <text x="330" y="531" font-size="11.5" fill="#a23226">249 records · 32 fields · rich workflow</text>
+      <text x="330" y="549" font-size="11.5" fill="#a23226">Statuses populated (153 Not Started,</text>
+      <text x="330" y="564" font-size="11.5" fill="#a23226">71 Submitted, 24 In Progress)</text>
+      <text x="330" y="585" font-size="12" font-weight="700" fill="#c0392b">⚠ Student 0/249 · Scholarship 0/249 linked</text>
+      <text x="330" y="602" font-size="12" font-weight="700" fill="#c0392b">→ orphaned: not wired to anything</text>
+      <rect x="636" y="488" width="180" height="76" rx="9" fill="#fde8e8" stroke="#c0392b" stroke-width="1.6"/>
+      <text x="648" y="510" font-size="14" font-weight="700" fill="#922b21">Nathalia</text>
+      <text x="648" y="528" font-size="11" fill="#a23226">rogue one-off table</text>
+      <text x="648" y="544" font-size="11" fill="#a23226">59 records (39 Submitted)</text>
+      <text x="648" y="559" font-size="11" fill="#a23226">should be rows in Applications</text>
+      <rect x="636" y="578" width="180" height="40" rx="8" fill="#f1f1f1" stroke="#9aa0a6"/>
+      <text x="726" y="603" font-size="12" fill="#5f6368" text-anchor="middle">Tasks — empty / unused</text>
+      <path d="M432,344 C432,300 600,300 640,242" fill="none" stroke="#2e7d4f" stroke-width="1.6" marker-end="url(#arG)"/>
+      <text x="556" y="300" font-size="10.5" fill="#1b5e3a" text-anchor="middle">matching ✓</text>
+      <path d="M640,436 C600,460 560,470 520,486" fill="none" stroke="#c77d20" stroke-width="1.6" marker-end="url(#arA)"/>
+      <text x="612" y="466" font-size="10.5" fill="#8a5512" text-anchor="middle">partial 51/66</text>
+      <path d="M430,488 C430,460 470,450 500,438" fill="none" stroke="#c0392b" stroke-width="1.6" stroke-dasharray="5 4"/>
+      <text x="455" y="470" font-size="14" font-weight="700" fill="#c0392b">✗</text>
+      <rect x="1040" y="130" width="120" height="40" rx="8" fill="#fde8e8" stroke="#c0392b" stroke-dasharray="5 3"/>
+      <text x="1100" y="155" font-size="11.5" font-weight="600" fill="#922b21" text-anchor="middle">team manual entry</text>
+      <path d="M1100,170 L1100,206" stroke="#c0392b" stroke-width="1.6" marker-end="url(#arR)"/>
+      <rect x="1030" y="208" width="244" height="92" rx="9" fill="#fdf3e3" stroke="#c77d20" stroke-width="1.6"/>
+      <text x="1042" y="231" font-size="15" font-weight="700" fill="#8a5512">Weekly Reports</text>
+      <text x="1042" y="250" font-size="11.5" fill="#7c4a12">6 hand-written rows</text>
+      <text x="1042" y="267" font-size="11" fill="#9a6516">free-text narratives, entered</text>
+      <text x="1042" y="282" font-size="11" fill="#9a6516">manually, stopped ~April</text>
+      <path d="M1152,300 L1152,356" stroke="#5f6368" stroke-width="1.6" marker-end="url(#ar)"/>
+      <rect x="1030" y="358" width="244" height="100" rx="9" fill="#fde8e8" stroke="#c0392b" stroke-width="1.8"/>
+      <text x="1042" y="382" font-size="15" font-weight="700" fill="#922b21">Interface Dashboard</text>
+      <text x="1042" y="401" font-size="11.5" fill="#a23226">"Weekly Client Progress"</text>
+      <text x="1042" y="420" font-size="11.5" fill="#a23226">reads only Weekly Reports</text>
+      <text x="1042" y="440" font-size="12" font-weight="700" fill="#c0392b">shows 0 apps / $0 this week</text>
+      <path d="M612,560 C800,640 900,560 1028,430" fill="none" stroke="#c0392b" stroke-width="2" stroke-dasharray="7 5" marker-end="url(#arR)"/>
+      <text x="828" y="606" font-size="16" font-weight="700" fill="#c0392b" text-anchor="middle">✗</text>
+      <rect x="690" y="660" width="430" height="46" rx="8" fill="#fff5f5" stroke="#c0392b"/>
+      <text x="905" y="681" font-size="12.5" font-weight="700" fill="#922b21" text-anchor="middle">249 real applications never reach the dashboard.</text>
+      <text x="905" y="698" font-size="11.5" fill="#a23226" text-anchor="middle">Activity is logged in 3 disconnected places, none feeding reporting.</text>
+    </svg>
+    <figcaption>Current state. Red = broken or disconnected, amber = duplicated, green = working.</figcaption>
+  </figure>
+
+  <ul class="clean">
+    <li class="x"><b>Applications is orphaned.</b> 249 records with rich workflow, but 0/249 linked to a Student or Scholarship and only 28/249 to a Client.</li>
+    <li class="x"><b>Activity is split across three places.</b> Applications (249), the Nathalia one-off table (59), and hand-written Weekly Reports (6). No single source of truth.</li>
+    <li class="x"><b>The dashboard reads the wrong source.</b> It pulls only from manual Weekly Reports, which stopped being filled around April, so it shows zero.</li>
+    <li><b>Clients and Student Profiles duplicate each other.</b> The same academic fields (GPA, SAT, major, race) live on both tables.</li>
+    <li><b>Intake is misfiring.</b> The Sheets-to-Clients automation is off, while four email automations fire on every create and update. A duplicate client and two blank ghost rows already slipped in.</li>
+    <li class="ok"><b>One thing already works:</b> Hub matching. 1,678 of 1,922 scholarships are matched to clients.</li>
+  </ul>
+
+  <h2><span class="n">2</span> Pain points today</h2>
+  <p class="lead">The same root cause — disconnected data — shows up differently for each person.</p>
+  <div class="persona">
+    <div class="pcard cli">
+      <div class="ph">Clients (families)<small>the people paying</small></div>
+      <div class="pb"><ul>
+        <li>Fly blind between calls; no way to see progress without asking.</li>
+        <li>A $13K win went unnoticed because no one was watching the inbox.</li>
+        <li>Can't see the totals that matter: applications submitted, dollars applied for, wins.</li>
+        <li>It can feel like nothing is happening, even when the team is working hard.</li>
+      </ul></div>
+    </div>
+    <div class="pcard str">
+      <div class="ph">Strategist (Sienna)<small>doing the work</small></div>
+      <div class="pb"><ul>
+        <li>Lives in personal Excel files that never reach Airtable, so her real volume (hundreds of apps) is invisible to the system.</li>
+        <li>Hunts for matching scholarships by hand instead of pulling a ready list.</li>
+        <li>Rebuilds spreadsheets and writes reports manually every week.</li>
+        <li>No guard against re-applying to the same scholarship, which risks disqualification.</li>
+      </ul></div>
+    </div>
+    <div class="pcard fnd">
+      <div class="ph">Founder (Tracey)<small>running the business</small></div>
+      <div class="pb"><ul>
+        <li>No view of total applications or dollars per client, which reads as weak performance.</li>
+        <li>The dashboard shows zero, so the value being delivered is invisible to clients.</li>
+        <li>Operations don't scale; every new client adds manual load and fragility.</li>
+        <li>Can't fully trust the numbers, so can't confidently sell, report, or plan the platform.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <h2><span class="n">3</span> The core problem</h2>
+  <div class="callout crit">
+    The problem isn't missing features. The team has done real work — hundreds of applications. The problem is that the tables aren't connected, the work is recorded in several parallel places, and the dashboard looks at a manual table instead of the live data. So the system can't show what's actually happening, which reads as poor performance to clients even when the work is strong.
+  </div>
+
+  <h2><span class="n">4</span> The target architecture</h2>
+  <p class="lead">Five core tables wired into one source of truth that feeds the client-facing Scholarship Wallet. Matching and the portal are the only new builds.</p>
+
+  <figure>
+    <svg viewBox="0 0 1360 920" xmlns="http://www.w3.org/2000/svg" font-family="Inter, system-ui, sans-serif">
+      <defs>
+        <marker id="tg" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#2e7d4f"/></marker>
+        <marker id="tb" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#2563eb"/></marker>
+        <marker id="tp" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#7c4dff"/></marker>
+        <marker id="to" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#d97706"/></marker>
+        <marker id="tgr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#94a3b8"/></marker>
+      </defs>
+      <rect x="0" y="0" width="1360" height="920" fill="#ffffff"/>
+      <text x="36" y="32" font-size="22" font-weight="700" fill="#111827">Target process flow (Phase 1 blueprint)</text>
+      <text x="36" y="52" font-size="13" fill="#6b7280">Five core tables: Students · Scholarships · Applications · Awards · Emails  →  one source of truth feeding the Scholarship Wallet</text>
+      <g font-size="12" fill="#374151">
+        <rect x="36" y="64" width="13" height="13" rx="3" fill="#e8f5ec" stroke="#2e7d4f"/><text x="55" y="74">Core table</text>
+        <rect x="150" y="64" width="13" height="13" rx="3" fill="#e7f0fb" stroke="#2563eb"/><text x="169" y="74">New build</text>
+        <rect x="262" y="64" width="13" height="13" rx="3" fill="#f3eefe" stroke="#7c4dff"/><text x="281" y="74">Automation</text>
+        <rect x="382" y="64" width="13" height="13" rx="3" fill="#eef2f7" stroke="#94a3b8"/><text x="401" y="74">External / person</text>
+        <rect x="520" y="64" width="13" height="13" rx="3" fill="#fff7e6" stroke="#d97706"/><text x="539" y="74">Source of truth</text>
+        <rect x="660" y="64" width="13" height="13" rx="3" fill="#f5f5f5" stroke="#94a3b8" stroke-dasharray="4 2"/><text x="679" y="74">Deferred to Week 6+</text>
+      </g>
+      <text x="40" y="108" font-size="11.5" font-weight="700" fill="#9ca3af" letter-spacing="1">INTAKE</text>
+      <text x="300" y="108" font-size="11.5" font-weight="700" fill="#9ca3af" letter-spacing="1">PEOPLE &amp; SOURCES</text>
+      <text x="1095" y="108" font-size="11.5" font-weight="700" fill="#9ca3af" letter-spacing="1">OUTPUTS</text>
+      <rect x="36" y="126" width="200" height="48" rx="8" fill="#eef2f7" stroke="#94a3b8"/>
+      <text x="136" y="146" font-size="13.5" font-weight="600" fill="#334155" text-anchor="middle">Google Form</text>
+      <text x="136" y="163" font-size="10.5" fill="#475569" text-anchor="middle">92-question intake</text>
+      <path d="M136,174 L136,204" stroke="#475569" stroke-width="1.4" marker-end="url(#tg)"/>
+      <rect x="36" y="206" width="200" height="40" rx="8" fill="#eef2f7" stroke="#94a3b8"/>
+      <text x="136" y="231" font-size="12.5" fill="#334155" text-anchor="middle">Google Sheet (responses)</text>
+      <path d="M136,246 L136,272" stroke="#7c4dff" stroke-width="1.4" marker-end="url(#tp)"/>
+      <rect x="36" y="274" width="200" height="52" rx="8" fill="#f3eefe" stroke="#7c4dff" stroke-dasharray="5 3"/>
+      <text x="136" y="294" font-size="12" font-weight="600" fill="#5b21b6" text-anchor="middle">Create Client</text>
+      <text x="136" y="311" font-size="11.5" font-weight="700" fill="#5b21b6" text-anchor="middle">+ dedup on email (fix)</text>
+      <path d="M236,294 C268,294 268,160 296,160" fill="none" stroke="#7c4dff" stroke-width="1.5" marker-end="url(#tp)"/>
+      <rect x="298" y="126" width="200" height="74" rx="9" fill="#e8f5ec" stroke="#2e7d4f" stroke-width="1.6"/>
+      <text x="310" y="148" font-size="14" font-weight="700" fill="#1b5e3a">Clients</text>
+      <text x="310" y="166" font-size="10.5" fill="#2e7d4f">contact · billing · rollups</text>
+      <text x="310" y="182" font-size="10.5" fill="#2e7d4f">intake Q1-12</text>
+      <rect x="298" y="212" width="200" height="74" rx="9" fill="#e8f5ec" stroke="#2e7d4f" stroke-width="1.6"/>
+      <text x="310" y="234" font-size="14" font-weight="700" fill="#1b5e3a">Students</text>
+      <text x="310" y="252" font-size="10.5" fill="#2e7d4f">academics + match criteria</text>
+      <text x="310" y="268" font-size="10.5" fill="#2e7d4f">intake Q13-90</text>
+      <path d="M398,200 L398,210" stroke="#2e7d4f" stroke-width="1.5" marker-end="url(#tg)"/>
+      <rect x="528" y="126" width="210" height="74" rx="9" fill="#e8f5ec" stroke="#2e7d4f" stroke-width="1.6"/>
+      <text x="540" y="148" font-size="14" font-weight="700" fill="#1b5e3a">Scholarships (master)</text>
+      <text x="540" y="166" font-size="10.5" fill="#2e7d4f">eligibility tags · categories</text>
+      <text x="540" y="182" font-size="10.5" fill="#2e7d4f">Hub (1,922) consolidated</text>
+      <rect x="528" y="212" width="210" height="62" rx="9" fill="#f5f5f5" stroke="#94a3b8" stroke-dasharray="4 2"/>
+      <text x="540" y="233" font-size="12.5" font-weight="700" fill="#475569">Firecrawl + Make scraper</text>
+      <text x="540" y="250" font-size="10.5" fill="#64748b">~250/week · Week 6 (deferred)</text>
+      <text x="540" y="265" font-size="10.5" fill="#64748b">feeds new scholarships in</text>
+      <path d="M633,212 L633,202" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#tgr)"/>
+      <rect x="298" y="312" width="440" height="58" rx="9" fill="#e7f0fb" stroke="#2563eb" stroke-width="1.8"/>
+      <text x="310" y="334" font-size="14" font-weight="700" fill="#1e40af">Matching engine  (new · Week 3)</text>
+      <text x="310" y="353" font-size="11" fill="#1d4ed8">Students × scholarship tags  →  per-client matched views</text>
+      <path d="M360,286 L380,308" stroke="#2563eb" stroke-width="1.4" marker-end="url(#tb)"/>
+      <path d="M620,200 L600,308" stroke="#2563eb" stroke-width="1.4" marker-end="url(#tb)"/>
+      <rect x="770" y="312" width="190" height="58" rx="9" fill="#eef2f7" stroke="#94a3b8"/>
+      <text x="782" y="334" font-size="13" font-weight="700" fill="#334155">Sienna (Strategy Lead)</text>
+      <text x="782" y="352" font-size="10.5" fill="#475569">pull match → apply → log</text>
+      <path d="M738,341 L766,341" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#tgr)"/>
+      <rect x="298" y="404" width="500" height="116" rx="10" fill="#fff7e6" stroke="#d97706" stroke-width="2.4"/>
+      <text x="314" y="430" font-size="16" font-weight="700" fill="#92400e">Applications</text>
+      <rect x="440" y="415" width="170" height="20" rx="10" fill="#fde9c8" stroke="#d97706"/>
+      <text x="525" y="430" font-size="11" font-weight="700" fill="#92400e" text-anchor="middle">SINGLE SOURCE OF TRUTH</text>
+      <text x="314" y="452" font-size="11.5" fill="#a8590c">every row linked to Client + Student + Scholarship</text>
+      <rect x="314" y="462" width="225" height="22" rx="6" fill="#fffaf0" stroke="#e0a55c"/><text x="322" y="477" font-size="10.5" fill="#92400e">← migrate Sienna's trackers (Marleigh pilot)</text>
+      <rect x="314" y="488" width="225" height="22" rx="6" fill="#fffaf0" stroke="#e0a55c"/><text x="322" y="503" font-size="10.5" fill="#92400e">strategists log here — no Excel, no per-client tables</text>
+      <rect x="556" y="462" width="228" height="48" rx="6" fill="#fffaf0" stroke="#e0a55c"/>
+      <text x="564" y="480" font-size="10.5" fill="#92400e">Nathalia (59) folded in.</text>
+      <text x="564" y="496" font-size="10.5" fill="#92400e">Statuses: Applied / Pending /</text>
+      <text x="564" y="510" font-size="10.5" fill="#92400e">Awarded / Rejected + dedup</text>
+      <path d="M540,370 L540,400" stroke="#d97706" stroke-width="1.7" marker-end="url(#to)"/>
+      <path d="M865,370 C865,390 700,392 660,400" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#to)"/>
+      <rect x="298" y="548" width="210" height="74" rx="9" fill="#e8f5ec" stroke="#2e7d4f" stroke-width="1.6"/>
+      <text x="310" y="570" font-size="14" font-weight="700" fill="#1b5e3a">Awards</text>
+      <text x="310" y="588" font-size="10.5" fill="#2e7d4f">won records · amount · date</text>
+      <text x="310" y="604" font-size="10.5" fill="#2e7d4f">from Applications + email detection</text>
+      <rect x="528" y="548" width="210" height="74" rx="9" fill="#e8f5ec" stroke="#2e7d4f" stroke-width="1.6"/>
+      <text x="540" y="570" font-size="14" font-weight="700" fill="#1b5e3a">Emails</text>
+      <text x="540" y="588" font-size="10.5" fill="#2e7d4f">parsed decision emails</text>
+      <text x="540" y="604" font-size="10.5" fill="#2e7d4f">linked to scholarship + client</text>
+      <path d="M380,520 L380,544" stroke="#2e7d4f" stroke-width="1.5" marker-end="url(#tg)"/>
+      <text x="392" y="536" font-size="9.5" fill="#1b5e3a">status = Won</text>
+      <path d="M600,548 L560,524" stroke="#2e7d4f" stroke-width="1.5" marker-end="url(#tg)"/>
+      <text x="612" y="540" font-size="9.5" fill="#1b5e3a">update status</text>
+      <text x="40" y="540" font-size="11.5" font-weight="700" fill="#9ca3af" letter-spacing="1">EMAIL INTELLIGENCE · WEEK 4</text>
+      <rect x="36" y="548" width="200" height="74" rx="9" fill="#f3eefe" stroke="#7c4dff" stroke-dasharray="5 3"/>
+      <text x="48" y="570" font-size="12.5" font-weight="700" fill="#5b21b6">Client inboxes → Make + Claude</text>
+      <text x="48" y="588" font-size="10.5" fill="#5b21b6">detect award / rejection /</text>
+      <text x="48" y="603" font-size="10.5" fill="#5b21b6">interview · "nothing missed"</text>
+      <path d="M236,585 L524,585" stroke="#7c4dff" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#tp)"/>
+      <rect x="1090" y="126" width="250" height="80" rx="9" fill="#e7f0fb" stroke="#2563eb" stroke-width="1.8"/>
+      <text x="1102" y="148" font-size="14" font-weight="700" fill="#1e40af">Scholarship Wallet (portal)</text>
+      <text x="1102" y="167" font-size="10.5" fill="#1d4ed8">Applications · Awards · Funding Gap views</text>
+      <text x="1102" y="184" font-size="10.5" fill="#1d4ed8">each client sees only their own data</text>
+      <text x="1102" y="199" font-size="10" fill="#64748b">the "bank-like" view Tracey wants</text>
+      <rect x="1090" y="220" width="250" height="56" rx="9" fill="#e8f5ec" stroke="#2e7d4f" stroke-width="1.6"/>
+      <text x="1102" y="242" font-size="13.5" font-weight="700" fill="#1b5e3a">Internal dashboard (live)</text>
+      <text x="1102" y="261" font-size="10.5" fill="#2e7d4f">KPIs from live rollups</text>
+      <rect x="1090" y="290" width="250" height="50" rx="9" fill="#f3eefe" stroke="#7c4dff" stroke-dasharray="5 3"/>
+      <text x="1215" y="311" font-size="12.5" font-weight="600" fill="#5b21b6" text-anchor="middle">Auto weekly summary email</text>
+      <text x="1215" y="327" font-size="10" fill="#5b21b6" text-anchor="middle">no manual writing</text>
+      <path d="M798,440 C950,360 1000,180 1086,166" fill="none" stroke="#2e7d4f" stroke-width="1.6" marker-end="url(#tg)"/>
+      <text x="965" y="300" font-size="10.5" fill="#1b5e3a" text-anchor="middle">live rollups</text>
+      <path d="M798,470 C960,440 1000,260 1086,248" fill="none" stroke="#2563eb" stroke-width="1.5" marker-end="url(#tb)"/>
+      <path d="M508,580 C840,640 980,360 1086,318" fill="none" stroke="#7c4dff" stroke-width="1.3" stroke-dasharray="6 4" marker-end="url(#tp)"/>
+      <rect x="36" y="840" width="1288" height="56" rx="10" fill="#f0fdf4" stroke="#86c79b"/>
+      <text x="52" y="864" font-size="13" font-weight="700" fill="#14532d">Closed loop: intake → profiles → matching → one source of truth → Awards + live reporting + the Scholarship Wallet.</text>
+      <text x="52" y="883" font-size="12" fill="#166534">Email Intelligence (Week 4) keeps statuses current automatically. Scraping (Week 6) only turns on once the core is solid. Only two boxes are new builds.</text>
+    </svg>
+    <figcaption>Target state, aligned to the Phase 1 Operating Manual.</figcaption>
+  </figure>
+
+  <h2><span class="n">5</span> The data model (table reference)</h2>
+  <p class="lead">The five core tables and how they relate. This is the structure everything else reads from.</p>
+  <table>
+    <thead><tr><th>Table</th><th>Purpose</th><th>Key fields</th><th>Links to</th></tr></thead>
+    <tbody>
+      <tr><td><b>Clients</b></td><td>Contact, billing, service tier, headline totals</td><td>Parent name/email/phone, service tier, rollups (applied, $ applied, won, $ won, success rate)</td><td>Students, Applications</td></tr>
+      <tr><td><b>Students</b></td><td>Academic profile and matching criteria</td><td>GPA, SAT/ACT, major, school, state, race/ethnicity, first-gen, affiliations, financial need</td><td>Clients, Applications</td></tr>
+      <tr><td><b>Scholarships</b></td><td>The research asset and no-essay list, consolidated</td><td>Name, amount, deadline, link, eligibility tags, category, essay-required</td><td>Applications</td></tr>
+      <tr><td><b>Applications</b> <span class="badge b-gold">source of truth</span></td><td>One row per client per scholarship. Where all work is logged.</td><td>Status, date applied, submitted by, amount, items needed</td><td>Client, Student, Scholarship</td></tr>
+      <tr><td><b>Awards</b></td><td>Scholarships won</td><td>Amount won, date awarded</td><td>Application, Client</td></tr>
+      <tr><td><b>Emails</b></td><td>Parsed decision emails from client inboxes</td><td>Type (award/rejection/interview), date, matched scholarship</td><td>Application, Scholarship</td></tr>
+    </tbody>
+  </table>
+
+  <h2><span class="n">6</span> The work: fix, connect, build</h2>
+  <p class="lead">Most of this is connection and cleanup. New construction is the small part.</p>
+  <div class="cards">
+    <div class="card"><h3><span class="badge b-amber">Consolidate</span></h3><p>Make Applications the single source. Adopt the strategist's tracker format. Split Clients vs Students cleanly. Fold the Nathalia table in. Retire the empty Tasks table.</p></div>
+    <div class="card"><h3><span class="badge b-amber">Clean</span></h3><p>Merge the duplicate client, delete the two ghost rows, replace the record-ID "unique key" with an email-based key, and populate the empty Service Tier field.</p></div>
+    <div class="card"><h3><span class="badge b-red">Connect</span></h3><p>Link every Application to its Client, Student, and Scholarship (today: zero linked). Build rollups so all totals compute automatically.</p></div>
+    <div class="card"><h3><span class="badge b-blue">Build (new)</span></h3><p>The matching engine (criteria-based per-client views) and the client-facing Scholarship Wallet. These two are the only genuinely new pieces.</p></div>
+  </div>
+
+  <h2><span class="n">7</span> Phase 1 roadmap</h2>
+  <p class="lead">Mapped to the Operating Manual. Week 1 (this audit) is complete.</p>
+  <table class="roadmap">
+    <thead><tr><th>Week</th><th>Objective</th><th>Chris's deliverable</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Week 1</td><td>Audit everything</td><td>This architecture map: tables, automations, bottlenecks documented</td><td><span class="badge b-green">Complete</span></td></tr>
+      <tr><td>Week 2</td><td>Build the foundation</td><td>Students, Scholarships, Applications, Awards, Emails tables</td><td><span class="badge b-grey">Next</span></td></tr>
+      <tr><td>Week 3</td><td>Client Dashboard MVP</td><td>Scholarship Wallet: Applications, Awards, Funding Gap views (Marleigh pilot)</td><td><span class="badge b-grey">Planned</span></td></tr>
+      <tr><td>Week 4</td><td>Email Intelligence</td><td>Inbox monitoring + award/rejection/interview detection</td><td><span class="badge b-grey">Planned</span></td></tr>
+      <tr><td>Week 5</td><td>Application Tracking</td><td>Full status tracking + duplicate detection (100% visibility)</td><td><span class="badge b-grey">Planned</span></td></tr>
+      <tr><td>Week 6</td><td>Hub Expansion</td><td>Firecrawl + Make scraping, ~250 new scholarships/week</td><td><span class="badge b-grey">Deferred</span></td></tr>
+    </tbody>
+  </table>
+
+  <h2><span class="n">8</span> Decisions needed from the team</h2>
+  <p class="lead">Five things only leadership can settle. Each one either blocks a piece of the build or changes how it gets built.</p>
+  <div class="callout warn">
+    <ul class="clean" style="margin-top:2px">
+      <li><b>1. Airtable plan tier</b> <span class="badge b-red">hard blocker</span><br>The free plan caps a base at 1,000 records. The Hub already holds 1,922, and we'll add hundreds of application rows per client, so the free plan physically cannot hold the data. Nothing else works until this is settled.<br><em>Ask: are we on a paid Airtable plan with room for 50,000+ records?</em></li>
+      <li><b>2. Restructure permission</b><br>Fixing the base means deleting tables (the empty Tasks table, the Nathalia table once its data is merged in), merging duplicate records, and editing automations someone else built. These changes are hard to undo, so explicit sign-off matters.<br><em>Ask: am I cleared to delete and merge tables and edit existing automations?</em></li>
+      <li><b>3. Client portal tool and budget</b><br>The Scholarship Wallet lets each family log in and see only their own data. Airtable's own external sharing is pricey; tools like Softr or Noloco do client portals more cheaply on top of Airtable. The choice changes both the build and the monthly cost.<br><em>Ask: Airtable external access or Softr/Noloco, and is there budget?</em></li>
+      <li><b>4. Service tiers and sensitive data</b><br>The Service Tier field is blank for every client, and we need each one's tier (Done-For-You vs Intel) because it drives what they get and how they're reported. The base also holds minors' personal data (date of birth, race, income, FAFSA), so we need rules for who sees what, especially once clients log into the portal.<br><em>Ask: what tier is each active client, and what are the data-handling rules?</em></li>
+      <li><b>5. Strategist workflow</b> <span class="badge b-grey">confirmation</span><br>The system only works if Sienna logs her applications in Airtable, not personal Excel files. The Operating Manual already mandates this; it just has to hold in practice, or the dashboard shows empty data like it does today.<br><em>Ask: we're committed to Airtable-only logging, and I'll train Sienna on it, right?</em></li>
+    </ul>
+    <p style="margin:14px 0 0;font-size:13.5px;color:#374151"><b>In short:</b> #1 is the hard blocker, #2 and #3 shape the build, #4 fills in details you'll need, and #5 is the behavior that keeps the whole thing alive.</p>
+  </div>
+
+  <footer>
+    Pennywell Scholarship Operating System — Airtable Architecture Map · Phase 1, Week 1 · Prepared by Chris (Chief Automation Architect). Source: Airtable base audit, strategist trackers, intake form, and the Phase 1 Operating Manual.
+  </footer>
+</div>
+</body>
+</html>
