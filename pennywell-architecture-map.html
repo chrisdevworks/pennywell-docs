@@ -76,13 +76,12 @@
 <header class="hero">
   <div class="wrap">
     <!-- Navigation Bar -->
-    <!-- Navigation Bar -->
     <nav style="display: flex; gap: 20px; margin-bottom: 24px; font-size: 13px; font-weight: 600; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 12px;">
       <a href="index.html" style="color: #cbd5e1; text-decoration: none; padding-bottom: 10px; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#cbd5e1'">Home</a>
       <a href="pennywell-architecture-map.html" style="color: #fff; text-decoration: none; border-bottom: 2px solid #9fc2e8; padding-bottom: 10px;">Architecture Map</a>
       <a href="pennywell-business-guide.html" style="color: #cbd5e1; text-decoration: none; padding-bottom: 10px; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#cbd5e1'">Business Guide</a>
     </nav>
-
+    
     <p class="eyebrow">Phase 1 · Week 1 Deliverable — Airtable Architecture Map</p>
     <h1>Pennywell Scholarship Operating System</h1>
     <p class="sub">How the Airtable base works today, why the dashboard shows zero, and the wiring plan that turns it into one source of truth feeding the Scholarship Wallet.</p>
@@ -306,16 +305,17 @@
       <path d="M398,200 L398,210" stroke="#2e7d4f" stroke-width="1.5" marker-end="url(#tg)"/>
       <rect x="528" y="126" width="210" height="74" rx="9" fill="#e8f5ec" stroke="#2e7d4f" stroke-width="1.6"/>
       <text x="540" y="148" font-size="14" font-weight="700" fill="#1b5e3a">Scholarships (master)</text>
-      <text x="540" y="166" font-size="10.5" fill="#2e7d4f">eligibility tags · categories</text>
+      <text x="540" y="166" font-size="10.5" fill="#2e7d4f">eligibility tags · education level · categories</text>
       <text x="540" y="182" font-size="10.5" fill="#2e7d4f">Hub (1,922) consolidated</text>
       <rect x="528" y="212" width="210" height="62" rx="9" fill="#f5f5f5" stroke="#94a3b8" stroke-dasharray="4 2"/>
       <text x="540" y="233" font-size="12.5" font-weight="700" fill="#475569">Firecrawl + Make scraper</text>
       <text x="540" y="250" font-size="10.5" fill="#64748b">~250/week · Week 6 (deferred)</text>
       <text x="540" y="265" font-size="10.5" fill="#64748b">feeds new scholarships in</text>
       <path d="M633,212 L633,202" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#tgr)"/>
-      <rect x="298" y="312" width="440" height="58" rx="9" fill="#e7f0fb" stroke="#2563eb" stroke-width="1.8"/>
-      <text x="310" y="334" font-size="14" font-weight="700" fill="#1e40af">Matching engine  (new · Week 3)</text>
-      <text x="310" y="353" font-size="11" fill="#1d4ed8">Students × scholarship tags  →  per-client matched views</text>
+      <rect x="298" y="312" width="440" height="76" rx="9" fill="#e7f0fb" stroke="#2563eb" stroke-width="1.8"/>
+      <text x="310" y="333" font-size="14" font-weight="700" fill="#1e40af">Matching engine  (new · Week 3)</text>
+      <text x="310" y="351" font-size="11" fill="#1d4ed8">Students × scholarship tags  →  per-client matched views</text>
+      <text x="310" y="369" font-size="10.5" fill="#1d4ed8">+ manual un-match per client (removed from view, stays in Hub)</text>
       <path d="M360,286 L380,308" stroke="#2563eb" stroke-width="1.4" marker-end="url(#tb)"/>
       <path d="M620,200 L600,308" stroke="#2563eb" stroke-width="1.4" marker-end="url(#tb)"/>
       <rect x="770" y="312" width="190" height="58" rx="9" fill="#eef2f7" stroke="#94a3b8"/>
@@ -333,7 +333,7 @@
       <text x="564" y="480" font-size="10.5" fill="#92400e">Nathalia (59) folded in.</text>
       <text x="564" y="496" font-size="10.5" fill="#92400e">Statuses: Applied / Pending /</text>
       <text x="564" y="510" font-size="10.5" fill="#92400e">Awarded / Rejected + dedup</text>
-      <path d="M540,370 L540,400" stroke="#d97706" stroke-width="1.7" marker-end="url(#to)"/>
+      <path d="M540,388 L540,400" stroke="#d97706" stroke-width="1.7" marker-end="url(#to)"/>
       <path d="M865,370 C865,390 700,392 660,400" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#to)"/>
       <rect x="298" y="548" width="210" height="74" rx="9" fill="#e8f5ec" stroke="#2e7d4f" stroke-width="1.6"/>
       <text x="310" y="570" font-size="14" font-weight="700" fill="#1b5e3a">Awards</text>
@@ -382,7 +382,7 @@
     <tbody>
       <tr><td><b>Clients</b></td><td>Contact, billing, service tier, headline totals</td><td>Parent name/email/phone, service tier, rollups (applied, $ applied, won, $ won, success rate)</td><td>Students, Applications</td></tr>
       <tr><td><b>Students</b></td><td>Academic profile and matching criteria</td><td>GPA, SAT/ACT, major, school, state, race/ethnicity, first-gen, affiliations, financial need</td><td>Clients, Applications</td></tr>
-      <tr><td><b>Scholarships</b></td><td>The research asset and no-essay list, consolidated</td><td>Name, amount, deadline, link, eligibility tags, category, essay-required</td><td>Applications</td></tr>
+      <tr><td><b>Scholarships</b></td><td>The research asset and no-essay list, consolidated</td><td>Name, amount, deadline, link, eligibility tags, education level, category, essay-required</td><td>Applications</td></tr>
       <tr><td><b>Applications</b> <span class="badge b-gold">source of truth</span></td><td>One row per client per scholarship. Where all work is logged.</td><td>Status, date applied, submitted by, amount, items needed</td><td>Client, Student, Scholarship</td></tr>
       <tr><td><b>Awards</b></td><td>Scholarships won</td><td>Amount won, date awarded</td><td>Application, Client</td></tr>
       <tr><td><b>Emails</b></td><td>Parsed decision emails from client inboxes</td><td>Type (award/rejection/interview), date, matched scholarship</td><td>Application, Scholarship</td></tr>
@@ -395,7 +395,7 @@
     <div class="card"><h3><span class="badge b-amber">Consolidate</span></h3><p>Make Applications the single source. Adopt the strategist's tracker format. Split Clients vs Students cleanly. Fold the Nathalia table in. Retire the empty Tasks table.</p></div>
     <div class="card"><h3><span class="badge b-amber">Clean</span></h3><p>Merge the duplicate client, delete the two ghost rows, replace the record-ID "unique key" with an email-based key, and populate the empty Service Tier field.</p></div>
     <div class="card"><h3><span class="badge b-red">Connect</span></h3><p>Link every Application to its Client, Student, and Scholarship (today: zero linked). Build rollups so all totals compute automatically.</p></div>
-    <div class="card"><h3><span class="badge b-blue">Build (new)</span></h3><p>The matching engine (criteria-based per-client views) and the client-facing Scholarship Wallet. These two are the only genuinely new pieces.</p></div>
+    <div class="card"><h3><span class="badge b-blue">Build (new)</span></h3><p>The matching engine (criteria-based per-client views) and the client-facing Scholarship Wallet. These two are the only genuinely new pieces. <b>Matching engine must support a per-client manual override:</b> Sienna can remove a wrongly-matched scholarship from one client's list without deleting it from the Hub (it stays available to everyone else). <b>Matching criteria include an education-level tag</b> (high school senior / undergraduate / graduate) so scholarships are matched to the student's stage — added at Sienna's request (6/21 email).</p></div>
   </div>
 
   <h2><span class="n">7</span> Phase 1 roadmap</h2>
@@ -405,7 +405,7 @@
     <tbody>
       <tr><td>Week 1</td><td>Audit everything</td><td>This architecture map: tables, automations, bottlenecks documented</td><td><span class="badge b-green">Complete</span></td></tr>
       <tr><td>Week 2</td><td>Build the foundation</td><td>Students, Scholarships, Applications, Awards, Emails tables</td><td><span class="badge b-grey">Next</span></td></tr>
-      <tr><td>Week 3</td><td>Client Dashboard MVP</td><td>Scholarship Wallet: Applications, Awards, Funding Gap views (Marleigh pilot)</td><td><span class="badge b-grey">Planned</span></td></tr>
+      <tr><td>Week 3</td><td>Client Dashboard MVP</td><td>Scholarship Wallet: Applications, Awards, Funding Gap views (Marleigh pilot). Matching engine includes per-client manual un-match (remove from client view, keep in Hub)</td><td><span class="badge b-grey">Planned</span></td></tr>
       <tr><td>Week 4</td><td>Email Intelligence</td><td>Inbox monitoring + award/rejection/interview detection</td><td><span class="badge b-grey">Planned</span></td></tr>
       <tr><td>Week 5</td><td>Application Tracking</td><td>Full status tracking + duplicate detection (100% visibility)</td><td><span class="badge b-grey">Planned</span></td></tr>
       <tr><td>Week 6</td><td>Hub Expansion</td><td>Firecrawl + Make scraping, ~250 new scholarships/week</td><td><span class="badge b-grey">Deferred</span></td></tr>
@@ -417,12 +417,22 @@
   <div class="callout warn">
     <ul class="clean" style="margin-top:2px">
       <li><b>1. Airtable plan tier</b> <span class="badge b-red">hard blocker</span><br>The free plan caps a base at 1,000 records. The Hub already holds 1,922, and we'll add hundreds of application rows per client, so the free plan physically cannot hold the data. Nothing else works until this is settled.<br><em>Ask: are we on a paid Airtable plan with room for 50,000+ records?</em></li>
-      <li><b>2. Restructure permission</b><br>Fixing the base means deleting tables (the empty Tasks table, the Nathalia table once its data is merged in), merging duplicate records, and editing automations someone else built. These changes are hard to undo, so explicit sign-off matters.<br><em>Ask: am I cleared to delete and merge tables and edit existing automations?</em></li>
-      <li><b>3. Client portal tool and budget</b><br>The Scholarship Wallet lets each family log in and see only their own data. Airtable's own external sharing is pricey; tools like Softr or Noloco do client portals more cheaply on top of Airtable. The choice changes both the build and the monthly cost.<br><em>Ask: Airtable external access or Softr/Noloco, and is there budget?</em></li>
+      <li><b>2. Build a new clean base, migrate into it</b> <span class="badge b-grey">confirmation</span><br>Agreed in the 6/19 meeting: instead of untangling the current base (249 orphaned applications, automations firing on every edit, ghost rows, a duplicate client), we build a fresh base inside the <em>same workspace</em> and copy clean data in. The old base stays as a read-only backup until the new one is validated, then it's archived. <b>No extra Airtable cost</b> — bases are unlimited on any plan; you pay per editor seat, not per base, and the new base gets its own 50,000-record cap. Migration runs in dependency order so links resolve: <b>Clients → Students → Scholarships + Hub → Applications → Awards → Emails</b> (clean as you go: dedupe the duplicate client, drop the two ghost rows, fold Nathalia into Applications, skip the empty Tasks table, swap the record-ID key for an email key). The stale Weekly Reports table isn't migrated — auto-rollups replace it.<br><em>Confirm: cleared to build a new base and migrate, keeping the old one as backup until sign-off?</em></li>
+      <li><b>3. Client portal tool and budget</b><br>The Scholarship Wallet lets each family log in and see only their own data. Airtable can't do that cheaply or securely on its own (no true per-client row-level security; external access is billed per seat). The fix is a front-end tool that sits <em>on top of</em> the Airtable base and adds logins, branding, and row-level security. Two real options — both prototype for free, both are add-ons to the Airtable Team plan, not replacements for it:
+      <table style="margin:10px 0 4px;border-collapse:collapse;font-size:12.5px;width:100%">
+        <thead><tr style="background:#f1f5f9;text-align:left"><th style="padding:5px 8px;border:1px solid #d7dde5">&nbsp;</th><th style="padding:5px 8px;border:1px solid #d7dde5">Softr (Professional)</th><th style="padding:5px 8px;border:1px solid #d7dde5">Noloco (Pro)</th></tr></thead>
+        <tbody>
+          <tr><td style="padding:5px 8px;border:1px solid #d7dde5"><b>Price (annual)</b></td><td style="padding:5px 8px;border:1px solid #d7dde5">~$139/mo</td><td style="padding:5px 8px;border:1px solid #d7dde5">~$99/mo</td></tr>
+          <tr><td style="padding:5px 8px;border:1px solid #d7dde5"><b>Client logins included</b></td><td style="padding:5px 8px;border:1px solid #d7dde5">100</td><td style="padding:5px 8px;border:1px solid #d7dde5">50 (then $1 each)</td></tr>
+          <tr><td style="padding:5px 8px;border:1px solid #d7dde5"><b>Airtable connection</b></td><td style="padding:5px 8px;border:1px solid #d7dde5">Live read/write</td><td style="padding:5px 8px;border:1px solid #d7dde5">~60-sec sync</td></tr>
+          <tr><td style="padding:5px 8px;border:1px solid #d7dde5"><b>Extras</b></td><td style="padding:5px 8px;border:1px solid #d7dde5">Removes branding</td><td style="padding:5px 8px;border:1px solid #d7dde5">White-label + native mobile apps</td></tr>
+        </tbody>
+      </table>
+      Both do proper row-level security and branding. At 8–50 clients Noloco is the cheaper fit; past ~100 clients Softr's seat math pulls ahead. <b>Note:</b> "NocoDB" (seen in the meeting notes) is a <em>different</em> product — an open-source Airtable replacement, not a portal builder — so it's not in this comparison.<br><em>Ask: Softr or Noloco for the portal? Budget is $0 to prototype, then ~$99–139/mo at launch.</em></li>
       <li><b>4. Service tiers and sensitive data</b><br>The Service Tier field is blank for every client, and we need each one's tier (Done-For-You vs Intel) because it drives what they get and how they're reported. The base also holds minors' personal data (date of birth, race, income, FAFSA), so we need rules for who sees what, especially once clients log into the portal.<br><em>Ask: what tier is each active client, and what are the data-handling rules?</em></li>
       <li><b>5. Strategist workflow</b> <span class="badge b-grey">confirmation</span><br>The system only works if Sienna logs her applications in Airtable, not personal Excel files. The Operating Manual already mandates this; it just has to hold in practice, or the dashboard shows empty data like it does today.<br><em>Ask: we're committed to Airtable-only logging, and I'll train Sienna on it, right?</em></li>
     </ul>
-    <p style="margin:14px 0 0;font-size:13.5px;color:#374151"><b>In short:</b> #1 is the hard blocker, #2 and #3 shape the build, #4 fills in details you'll need, and #5 is the behavior that keeps the whole thing alive.</p>
+    <p style="margin:14px 0 0;font-size:13.5px;color:#374151"><b>In short:</b> #1 is the hard blocker, #2 is the build approach (agreed — just needs sign-off), #3 shapes the build, #4 fills in details you'll need, and #5 is the behavior that keeps the whole thing alive.</p>
   </div>
 
   <footer>
