@@ -22,10 +22,10 @@
   figure{margin:18px 0 6px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;overflow-x:auto}
   figure svg{width:100%;height:auto;min-width:840px;display:block}
   figcaption{font-size:12px;color:var(--muted);margin-top:8px;text-align:center}
-  .cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}
+  .cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:16px 0}
   .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
   .card .h{padding:12px 16px;color:#fff;font-weight:700;font-size:15px}
-  .card.dfy .h{background:#1e40af}.card.intel .h{background:#0f766e}
+  .card.dfy .h{background:#1e40af}.card.intel .h{background:#0f766e}.card.accel .h{background:#b45309}
   .card .b{padding:6px 18px 16px;font-size:13.5px;color:#374151}
   .card .b .price{font-weight:700;color:var(--ink)}
   .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}
@@ -71,22 +71,27 @@
   <p class="lead">Why it matters: because these scholarships are portable, the <b>same Hub serves every client</b> regardless of where each student goes to college. That is what makes the "one big inventory" model work, and why the database is the company's core asset. If the scholarships were school-specific, the inventory could not be reused across families.</p>
 
   <h2>Who pays, and what they get</h2>
-  <p class="lead">Two service tiers. The difference is how much of the work Pennywell does for you.</p>
+  <p class="lead">Three service tiers. The difference is how much of the work Pennywell does for the family — from a weekly list they act on themselves, up to full white-glove service. All are billed monthly.</p>
   <div class="cards">
-    <div class="card dfy"><div class="h">Done-For-You Concierge</div><div class="b">
-      <p class="price">≈ $5,000 / month</p>
-      <p>The premium tier. The team does everything: matches scholarships, writes essays, fills out and submits applications on the student's behalf, tracks every result, and reports progress. The family barely lifts a finger.</p>
+    <div class="card intel"><div class="h">Tier 1 · Scholarship Intel</div><div class="b">
+      <p class="price">$597 / month</p>
+      <p><i>"The Weekly Edge."</i> 40–50 curated scholarship matches delivered weekly (up to 200/month), each with deadline, award amount, eligibility, and a direct link, including hidden opportunities from institutional and niche sources. The family applies themselves. Pennywell does the matching; the family does the applying.</p>
     </div></div>
-    <div class="card intel"><div class="h">Scholarship Intel</div><div class="b">
-      <p class="price">Lower-cost, data-only</p>
-      <p>Each week the family gets a curated list of 50–75 freshly matched scholarships (name, amount, deadline, link) and applies themselves. Pennywell does the matching; the family does the applying.</p>
+    <div class="card accel"><div class="h">Tier 2 · Application Accelerator</div><div class="b">
+      <p class="price">$1,997 / month</p>
+      <p><i>"The Done-With-You Partnership."</i> Everything in Tier 1, plus 12–15 applications submitted on the student's behalf each week, AI-assisted essays refined in the student's own voice, a professional toolkit (recommendation-letter drafts, résumé, bio), and weekly progress reporting.</p>
+    </div></div>
+    <div class="card dfy"><div class="h">Tier 3 · Full Scholarship Concierge</div><div class="b">
+      <p class="price">$3,497 / month</p>
+      <p><i>"The White-Glove Experience."</i> Everything in Tiers 1 & 2, plus up to 25 completed applications per week, financial-aid appeal support, bi-weekly parent strategy calls, student interview prep, college-decision strategy, and a dedicated point of contact.</p>
     </div></div>
   </div>
+  <p class="lead" style="font-size:13.5px;color:var(--muted)"><b>Pricing while the system is being built:</b> existing clients (friends and family) get 50% off for the first few months, through about August 1, since the full automated service isn't live yet. New clients signing up from August 1 pay the full rates above. Invoicing is automated monthly by tier.</p>
   <p class="lead" style="font-size:13.5px;color:var(--muted)">Future products (Phase 2, not now): an Essay Vault, an AI toolkit, college-funding playbooks, and corporate-sponsored webinars.</p>
 
   <h2>How a family gets scholarships</h2>
   <p class="q">Your question: "How do clients get their scholarship?"</p>
-  <p class="lead">Six steps, from sign-up to seeing the results. For Done-For-You clients, Pennywell runs all six. Intel clients get steps 1–2, then apply on their own.</p>
+  <p class="lead">Six steps, from sign-up to seeing the results. For Application Accelerator and Full Concierge clients, Pennywell runs all six (Concierge at the highest volume). Scholarship Intel clients get steps 1–2 — the matched weekly list — then apply on their own.</p>
 
   <figure>
     <svg viewBox="0 0 1290 575" xmlns="http://www.w3.org/2000/svg" font-family="Inter, system-ui, sans-serif">
@@ -116,19 +121,19 @@
       <text x="516" y="275" font-size="10" fill="#2563eb" text-anchor="middle">profile &#215; Hub (1,900+)</text>
       <text x="516" y="289" font-size="10" fill="#2563eb" text-anchor="middle">&#8594; scholarships that fit</text>
 
-      <!-- Done-For-You -->
+      <!-- Pennywell applies (Tiers 2 & 3) -->
       <rect x="652" y="118" width="200" height="98" rx="12" fill="#edf7f0" stroke="#2e7d4f" stroke-width="1.6"/>
-      <text x="666" y="142" font-size="14" font-weight="700" fill="#1b5e3a">Done-For-You</text>
-      <text x="666" y="162" font-size="10" fill="#2e7d4f">the team applies on their behalf</text>
-      <text x="666" y="177" font-size="10" fill="#2e7d4f">(no-essay + essay), writes essays</text>
-      <text x="666" y="199" font-size="10.5" font-weight="600" fill="#1b5e3a">~25-75 applications / week</text>
+      <text x="666" y="142" font-size="14" font-weight="700" fill="#1b5e3a">Pennywell applies</text>
+      <text x="666" y="162" font-size="10" fill="#2e7d4f">Tiers 2 &amp; 3 — the team submits</text>
+      <text x="666" y="177" font-size="10" fill="#2e7d4f">applications &amp; refines essays</text>
+      <text x="666" y="199" font-size="10.5" font-weight="600" fill="#1b5e3a">~12-25 applications / week</text>
 
       <!-- Scholarship Intel -->
       <rect x="652" y="330" width="200" height="98" rx="12" fill="#e9f6f4" stroke="#0f766e" stroke-width="1.6"/>
       <text x="666" y="354" font-size="14" font-weight="700" fill="#0f766e">Scholarship Intel</text>
-      <text x="666" y="374" font-size="10" fill="#0f766e">client gets a weekly matched list</text>
+      <text x="666" y="374" font-size="10" fill="#0f766e">Tier 1 — client gets a matched list</text>
       <text x="666" y="389" font-size="10" fill="#0f766e">and applies themselves</text>
-      <text x="666" y="411" font-size="10.5" font-weight="600" fill="#0f5e58">50-75 new matches / week</text>
+      <text x="666" y="411" font-size="10.5" font-weight="600" fill="#0f5e58">40-50 new matches / week</text>
 
       <!-- 4 Tracked -->
       <rect x="892" y="218" width="170" height="92" rx="12" fill="#f3eefe" stroke="#7c4dff" stroke-width="1.6"/>
@@ -162,9 +167,9 @@
 
       <!-- callout band -->
       <rect x="24" y="446" width="1242" height="76" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
-      <text x="40" y="470" font-size="13" font-weight="700" fill="#0f172a">Two ways clients pay:</text>
-      <text x="40" y="490" font-size="12" fill="#334155">Done-For-You is the premium concierge tier (the team does everything). Scholarship Intel is the lower-cost, data-only tier (client applies themselves).</text>
-      <text x="40" y="510" font-size="12" fill="#0f766e">The Hub is the shared asset both tiers draw from. Every new client benefits from thousands of pre-researched scholarships from day one.</text>
+      <text x="40" y="470" font-size="13" font-weight="700" fill="#0f172a">Three tiers, two paths:</text>
+      <text x="40" y="490" font-size="12" fill="#334155">Scholarship Intel ($597) is the data-only tier — the client applies. Application Accelerator ($1,997) and Full Concierge ($3,497) are done-with-you and white-glove — Pennywell applies, at higher volume as the tier rises.</text>
+      <text x="40" y="510" font-size="12" fill="#0f766e">The Hub is the shared asset all three tiers draw from. Every new client benefits from thousands of pre-researched scholarships from day one.</text>
 
       <text x="645" y="552" font-size="12.5" fill="#64748b" text-anchor="middle">Same start for every client; the middle splits by service tier; both end at the Scholarship Wallet.</text>
     </svg>
@@ -196,7 +201,7 @@
     <div class="stat"><div class="v">~170</div><div class="l">actually submitted for one client (Marleigh); ~289 more matched but not yet applied</div></div>
     <div class="stat"><div class="v">win rate</div><div class="l">wins are a fraction of applications, tracked as success rate</div></div>
   </div>
-  <p class="lead">A student can <b>win and stack many</b> scholarships (unlike a job, where you take one offer), so applying widely directly increases total funding. A Done-For-You family typically has hundreds of matched opportunities, with tens of applications going out weekly, building to hundreds over the program. Wins are a portion of those, which is why high volume and good matching are the whole strategy. The goal is never a single win; it is as many as it takes to close the family's funding gap.</p>
+  <p class="lead">A student can <b>win and stack many</b> scholarships (unlike a job, where you take one offer), so applying widely directly increases total funding. A done-for-you family (Application Accelerator or Full Concierge) typically has hundreds of matched opportunities, with tens of applications going out weekly, building to hundreds over the program. Wins are a portion of those, which is why high volume and good matching are the whole strategy. The goal is never a single win; it is as many as it takes to close the family's funding gap.</p>
   <div class="callout"><b>What the data shows today:</b> the trackers are still mostly upstream. For the sample client, of about 483 tracked rows only roughly 170 are actually submitted (289 are matched but not yet applied), and almost no decisions have been recorded yet (close to zero confirmed wins and one rejection). Statuses are also inconsistent, with five different spellings of "submitted." That is not a performance problem; it is the visibility-and-standardization gap this system is built to fix.</div>
 
   <h2>Why this is becoming a system</h2>
